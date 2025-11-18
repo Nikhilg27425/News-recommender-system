@@ -16,7 +16,7 @@ app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-change-this-in-pr
 
 # Configuration
 DB_PATH = "news_recommender.db"
-API_KEY = "172285a1b5b6f981c517e59461b31a9a"  # Replace with your API key
+API_KEY = "172285a1b5b6f981c517e59461b31a9a" 
 MODEL_PATH = "news_classifier_model.pkl"
 
 # Initialize database for user management
