@@ -183,7 +183,7 @@ python example_usage.py
 
 ## 📄 License
 
-This project is open source and available for use.
+This project is licensed under the **MIT License**.
 
 ## 🙏 Acknowledgments
 
@@ -193,7 +193,9 @@ This project is open source and available for use.
 
 ## 📧 Contact
 
-For questions or issues, please open an issue on GitHub.
+For any inquiries or collaborations, reach out to:
+📧 Email: 23UCS752@lnmiit.ac.com
+📌 GitHub: [Nikhil Gupta](https://github.com/Nikhilg27425)
 
 ---
 
