@@ -66,7 +66,7 @@ def fetch_news_from_api(api_key: str, query: str = "technology",
     return df
 
 
-def classify_news_articles(df: pd.DataFrame, model_path: str = "news_classifier_model.pkl") -> pd.DataFrame:
+def classify_news_articles(df: pd.DataFrame, model_path: str = "ai_models/news_classifier_model.pkl") -> pd.DataFrame:
     """
     Classify news articles using the trained model
     
@@ -157,7 +157,7 @@ def save_news_to_database(df: pd.DataFrame, db_path: str = "news_recommender.db"
 
 
 def fetch_and_save_news(api_key: str, query: str = "technology", 
-                       max_results: int = 10, model_path: str = "news_classifier_model.pkl",
+                       max_results: int = 10, model_path: str = "ai_models/news_classifier_model.pkl",
                        db_path: str = "news_recommender.db") -> int:
     """
     Complete pipeline: Fetch news from API, classify, and save to database

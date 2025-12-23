@@ -22,7 +22,7 @@ echo "Installing dependencies..."
 pip install -r requirements.txt
 
 # Check if model file exists
-if [ ! -f "news_classifier_model.pkl" ]; then
+if [ ! -f "backend/ai_models/news_classifier_model.pkl" ]; then
     echo ""
     echo "⚠️  WARNING: news_classifier_model.pkl not found!"
     echo "   The app will work but won't be able to classify new articles."
@@ -37,5 +37,6 @@ echo ""
 echo "Press Ctrl+C to stop the server"
 echo ""
 
+cd backend
 python app.py
 

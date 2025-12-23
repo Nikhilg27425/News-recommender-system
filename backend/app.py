@@ -11,35 +11,41 @@ import os
 import json
 from datetime import datetime
 
-app = Flask(__name__)
+app = Flask(__name__, 
+            template_folder='../frontend/templates',
+            static_folder='../frontend/static')
 app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-change-this-in-production')
 
 # Configuration
 DB_PATH = "news_recommender.db"
 API_KEY = "172285a1b5b6f981c517e59461b31a9a" 
-MODEL_PATH = "news_classifier_model.pkl"
+MODEL_PATH = "ai_models/news_classifier_model.pkl"
 
 # Initialize database for user management
 def init_user_db():
     """Initialize user authentication database"""
     import sqlite3
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    
-    # Create users table if it doesn't exist
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            user_id TEXT PRIMARY KEY,
-            username TEXT UNIQUE NOT NULL,
-            email TEXT UNIQUE,
-            password_hash TEXT NOT NULL,
-            created_at TEXT NOT NULL,
-            last_login TEXT
-        )
-    """)
-    
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(DB_PATH, timeout=20.0)
+        cursor = conn.cursor()
+        
+        # Create users table if it doesn't exist
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                user_id TEXT PRIMARY KEY,
+                username TEXT UNIQUE NOT NULL,
+                email TEXT UNIQUE,
+                password_hash TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                last_login TEXT
+            )
+        """)
+        
+        conn.commit()
+        conn.close()
+        print("✅ User database initialized successfully")
+    except Exception as e:
+        print(f"❌ Error initializing user database: {e}")
 
 # Initialize on startup
 init_user_db()
@@ -66,28 +72,34 @@ def login():
             flash('Please provide both username and password', 'error')
             return render_template('login.html')
         
-        db = NewsDatabase(DB_PATH)
-        conn = db._get_connection()
-        cursor = conn.cursor()
-        
-        cursor.execute("SELECT user_id, username, password_hash FROM users WHERE username = ?", (username,))
-        user = cursor.fetchone()
-        
-        if user and check_password_hash(user[2], password):
-            session['user_id'] = user[0]
-            session['username'] = user[1]
+        try:
+            db = NewsDatabase(DB_PATH)
+            conn = db._get_connection()
+            cursor = conn.cursor()
             
-            # Update last login
-            cursor.execute("UPDATE users SET last_login = ? WHERE user_id = ?", 
-                         (datetime.now().isoformat(), user[0]))
-            conn.commit()
+            cursor.execute("SELECT user_id, username, password_hash FROM users WHERE username = ?", (username,))
+            user = cursor.fetchone()
             
-            db.close()
-            flash('Login successful!', 'success')
-            return redirect(url_for('dashboard'))
-        else:
-            db.close()
-            flash('Invalid username or password', 'error')
+            if user and check_password_hash(user[2], password):
+                session['user_id'] = user[0]
+                session['username'] = user[1]
+                
+                # Update last login
+                cursor.execute("UPDATE users SET last_login = ? WHERE user_id = ?", 
+                             (datetime.now().isoformat(), user[0]))
+                conn.commit()
+                
+                flash('Login successful!', 'success')
+                return redirect(url_for('dashboard'))
+            else:
+                flash('Invalid username or password', 'error')
+                
+        except Exception as e:
+            print(f"Login error: {e}")
+            flash('Login failed. Please try again.', 'error')
+        finally:
+            if 'db' in locals():
+                db.close()
     
     return render_template('login.html')
 
@@ -109,40 +121,55 @@ def register():
             flash('Passwords do not match', 'error')
             return render_template('register.html')
         
-        db = NewsDatabase(DB_PATH)
-        conn = db._get_connection()
-        cursor = conn.cursor()
+        # Handle empty email - convert to None for database
+        email = email.strip() if email else None
+        email = email if email else None  # Convert empty string to None
         
-        # Check if username exists
-        cursor.execute("SELECT user_id FROM users WHERE username = ?", (username,))
-        if cursor.fetchone():
-            db.close()
-            flash('Username already exists', 'error')
-            return render_template('register.html')
-        
-        # Check if email exists
-        if email:
-            cursor.execute("SELECT user_id FROM users WHERE email = ?", (email,))
+        # Use a single database connection with proper error handling
+        try:
+            db = NewsDatabase(DB_PATH)
+            conn = db._get_connection()
+            cursor = conn.cursor()
+            
+            # Check if username exists
+            cursor.execute("SELECT user_id FROM users WHERE username = ?", (username,))
             if cursor.fetchone():
-                db.close()
-                flash('Email already registered', 'error')
+                flash('Username already exists', 'error')
                 return render_template('register.html')
-        
-        # Create new user
-        user_id = f"user_{datetime.now().strftime('%Y%m%d%H%M%S%f')}"
-        password_hash = generate_password_hash(password)
-        created_at = datetime.now().isoformat()
-        
-        cursor.execute("""
-            INSERT INTO users (user_id, username, email, password_hash, created_at)
-            VALUES (?, ?, ?, ?, ?)
-        """, (user_id, username, email, password_hash, created_at))
-        
-        conn.commit()
-        db.close()
-        
-        flash('Registration successful! Please login.', 'success')
-        return redirect(url_for('login'))
+            
+            # Check if email exists (only if email is provided)
+            if email:
+                cursor.execute("SELECT user_id FROM users WHERE email = ?", (email,))
+                if cursor.fetchone():
+                    flash('Email already registered', 'error')
+                    return render_template('register.html')
+            
+            # Create new user
+            user_id = f"user_{datetime.now().strftime('%Y%m%d%H%M%S%f')}"
+            password_hash = generate_password_hash(password)
+            created_at = datetime.now().isoformat()
+            
+            cursor.execute("""
+                INSERT INTO users (user_id, username, email, password_hash, created_at)
+                VALUES (?, ?, ?, ?, ?)
+            """, (user_id, username, email, password_hash, created_at))
+            
+            conn.commit()
+            flash('Registration successful! Please login.', 'success')
+            return redirect(url_for('login'))
+            
+        except Exception as e:
+            print(f"Registration error: {e}")
+            if "UNIQUE constraint failed: users.username" in str(e):
+                flash('Username already exists', 'error')
+            elif "UNIQUE constraint failed: users.email" in str(e):
+                flash('Email already registered', 'error')
+            else:
+                flash('Registration failed. Please try again.', 'error')
+            return render_template('register.html')
+        finally:
+            if 'db' in locals():
+                db.close()
     
     return render_template('register.html')
 

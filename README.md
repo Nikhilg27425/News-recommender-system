@@ -20,25 +20,41 @@ A complete news recommendation system with machine learning classification, user
 
 ```
 recommendor_model/
-├── app.py                      # Flask web application
-├── database.py                 # Database operations
-├── database_integration.py     # API integration
-├── user_interaction_helper.py  # User interaction management
+├── backend/                    # Backend Python application
+│   ├── ai_models/             # AI/ML models
+│   │   └── news_classifier_model.pkl
+│   ├── app.py                 # Main Flask application
+│   ├── database.py            # Database operations
+│   ├── database_integration.py # API integration
+│   ├── user_interaction_helper.py # User interaction management
+│   ├── example_usage.py       # Usage examples
+│   ├── *.ipynb               # Jupyter notebooks
+│   ├── sports_classified_news.csv # Training data
+│   └── news_recommender.db    # SQLite database
+│
+├── frontend/                   # Frontend assets
+│   ├── static/                # Static files
+│   │   ├── css/
+│   │   │   └── style.css
+│   │   └── js/
+│   │       ├── dashboard.js
+│   │       └── main.js
+│   └── templates/             # HTML templates
+│       ├── base.html
+│       ├── dashboard.html
+│       ├── login.html
+│       └── register.html
+│
+├── deployment/                 # Deployment documentation
+│   └── DEPLOYMENT.md          # Deployment instructions
+│
 ├── requirements.txt           # Python dependencies
-├── templates/                  # HTML templates
-│   ├── base.html
-│   ├── login.html
-│   ├── register.html
-│   └── dashboard.html
-├── static/                    # Static files
-│   ├── css/
-│   │   └── style.css
-│   └── js/
-│       ├── main.js
-│       └── dashboard.js
-├── News_classifier.ipynb      # Model training notebook
-├── news_classifier_model.pkl  # Trained model
-└── README.md                  # This file
+├── Procfile                   # Heroku/Render deployment
+├── render.yaml               # Render deployment config
+├── runtime.txt               # Python version specification
+├── run.sh                    # Local development script
+├── LICENSE                   # MIT License
+└── README.md                 # This documentation
 ```
 
 ## 🛠️ Installation
@@ -64,7 +80,7 @@ pip install -r requirements.txt
 
 1. **Start the web application:**
 ```bash
-python app.py
+./run.sh
 ```
 
 2. **Open your browser:**
@@ -77,12 +93,6 @@ python app.py
    - Enter a topic (e.g., "technology", "sports")
    - Articles will be classified and saved automatically
 
-## 📚 Documentation
-
-- **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide
-- **[README_WEBAPP.md](README_WEBAPP.md)** - Web application documentation
-- **[README_DATABASE.md](README_DATABASE.md)** - Database documentation
-
 ## 🗄️ Database Schema
 
 The system uses two main databases:
@@ -90,18 +100,18 @@ The system uses two main databases:
 1. **news_items** - Stores news articles with classifications
 2. **user_interactions** - Tracks user clicks and preferences
 
-See [README_DATABASE.md](README_DATABASE.md) for detailed schema information.
+The database is automatically initialized when you first run the application.
 
 ## 🔧 Configuration
 
 ### API Key
-Update the `API_KEY` in `app.py` with your GNews API key:
+Update the `API_KEY` in `backend/app.py` with your GNews API key:
 ```python
 API_KEY = "your-api-key-here"
 ```
 
 ### Port
-The default port is 5001. To change it, edit `app.py`:
+The default port is 5001. To change it, edit `backend/app.py`:
 ```python
 app.run(debug=True, host='0.0.0.0', port=5001)
 ```
@@ -114,13 +124,13 @@ The news classification model is trained using:
 - Random Forest classifier
 - Top-K prediction strategy
 
-See `News_classifier.ipynb` for training details.
+See `backend/News_classifier.ipynb` for training details.
 
 ## 🎯 Usage Examples
 
 ### Fetch and Classify News
 ```python
-from database_integration import fetch_and_save_news
+from backend.database_integration import fetch_and_save_news
 
 fetch_and_save_news(
     api_key="your-api-key",
@@ -131,7 +141,7 @@ fetch_and_save_news(
 
 ### Record User Interaction
 ```python
-from database import NewsDatabase
+from backend.database import NewsDatabase
 
 db = NewsDatabase()
 db.record_user_interaction("user_123", "news_id_456", "click")
@@ -140,7 +150,7 @@ db.close()
 
 ### Get Recommendations
 ```python
-from user_interaction_helper import UserInteractionManager
+from backend.user_interaction_helper import UserInteractionManager
 
 manager = UserInteractionManager()
 recommendations = manager.get_recommendations_for_user("user_123", limit=10)
@@ -151,6 +161,7 @@ manager.close()
 
 Run the example script to test the system:
 ```bash
+cd backend
 python example_usage.py
 ```
 
@@ -169,7 +180,7 @@ python example_usage.py
 ## 🔒 Security Notes
 
 ⚠️ **Before deploying to production:**
-- Change the `SECRET_KEY` in `app.py`
+- Change the `SECRET_KEY` in `backend/app.py`
 - Use environment variables for sensitive data
 - Consider using a production WSGI server (Gunicorn)
 - Enable HTTPS
