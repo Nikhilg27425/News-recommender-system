@@ -218,3 +218,47 @@ input, textarea {
   50% { opacity: 0.5; }
 }
 .pulse { animation: pulse 2s infinite; }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE LAYOUT
+════════════════════════════════════════════════════════════════════════════ */
+
+/* ── App layout on mobile: full-height single column,
+      content scrolls, sidebar is a fixed bottom bar ─────────────────────── */
+@media (max-width: 900px) {
+  .app-layout {
+    /* Switch to a single-column block layout */
+    display: block;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  .main-content {
+    /* Full width, leave 60px gap at the bottom for the fixed nav bar */
+    display: block;
+    width: 100%;
+    overflow: visible;
+    padding-bottom: 60px;
+  }
+
+  .page-container {
+    padding: 16px;
+  }
+}
+
+/* ── Topbar ─────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .topbar       { padding: 0 14px; gap: 10px; position: sticky; top: 0; z-index: 100; }
+  .topbar-search { width: 160px; }
+  .topbar-logo-text { display: none; }
+  .topbar-logo-icon { display: none; }
+}
+@media (max-width: 480px) {
+  .topbar-search { display: none; }
+}
+
+/* ── Section title ─────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .section-title { font-size: 18px; }
+}

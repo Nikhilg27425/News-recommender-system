@@ -409,3 +409,73 @@
   opacity: 0.65;
   cursor: not-allowed;
 }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   AUTH PAGES — RESPONSIVE
+════════════════════════════════════════════════════════════════════════════ */
+
+/* Tablet: shrink left panel */
+@media (max-width: 900px) {
+  .auth-page {
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+  }
+  .auth-left {
+    padding: 32px 28px;
+  }
+  .auth-right {
+    padding: 32px 24px;
+  }
+  .auth-hero-title { font-size: 26px; }
+  .auth-features   { display: none; }    /* hide feature list on tablet */
+  .login-neural-bg { display: none; }
+  .login-footer-copy { display: none; }
+}
+
+/* Mobile: single column — show only the form, hide the left branding panel */
+@media (max-width: 640px) {
+  .auth-page {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  /* Hide the entire left branding panel on mobile */
+  .auth-left {
+    display: none;
+  }
+
+  .auth-right {
+    padding: 32px 20px;
+    min-height: 100vh;
+    align-items: flex-start;
+    padding-top: 48px;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 28px 20px;
+    border-radius: 0;
+    border: none;
+    background: transparent;
+  }
+
+  .auth-card-title    { font-size: 24px; }
+  .auth-card-subtitle { font-size: 13px; }
+
+  .oauth-buttons {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .submit-btn {
+    padding: 13px;
+  }
+
+  .auth-footer-badges {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .login-footer-copy { display: none; }
+}

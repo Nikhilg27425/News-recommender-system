@@ -237,3 +237,24 @@
 .active-badge { color: #34d399; }
 
 .danger-title { color: var(--text-primary); }
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .profile-layout { grid-template-columns: 1fr; }
+  .profile-tabs-nav {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 6px;
+  }
+  .profile-tab-btn { padding: 8px 12px; font-size: 12px; flex: 1; justify-content: center; }
+  .profile-tab-btn.logout-tab { border-top: none; padding-top: 8px; }
+}
+
+@media (max-width: 640px) {
+  .account-info-layout { flex-direction: column; }
+  .form-row { grid-template-columns: 1fr; }
+  .account-meta { flex-direction: column; }
+  .account-meta-item { min-width: unset; }
+}
