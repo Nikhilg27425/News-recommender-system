@@ -2,7 +2,7 @@
 
 A complete news recommendation system with machine learning classification, user interaction tracking, and a modern web interface.
 
-🔗 **Live Demo**: [Deployed Link](https://news-recommender-system-0gnf.onrender.com)
+🔗 **Live Demo**: [Deployed Link](https://newssphere-zvsv.onrender.com)
 
 ## 🚀 Features
 
