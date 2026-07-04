@@ -49,6 +49,22 @@ export default function LoginPage() {
     }
   };
 
+  const handleDemo = async () => {
+    setEmail('demo');
+    setPassword('demo123');
+    setError('');
+    setLoading(true);
+    try {
+      const data = await authApi.login({ username: 'demo', password: 'demo123' });
+      login(data.user, data.token);
+      navigate('/feed');
+    } catch (err) {
+      setError('Demo login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   /* ── Google OAuth ── */
   const handleGoogle = async () => {
     setError('');
@@ -210,6 +226,15 @@ export default function LoginPage() {
               disabled={loading || googleLoading}
             >
               {loading ? 'Signing in…' : 'Sign In to NewsSphere →'}
+            </button>
+
+            <button
+              type="button"
+              className="demo-btn"
+              onClick={handleDemo}
+              disabled={loading || googleLoading}
+            >
+              ⚡ Try Demo — no account needed
             </button>
           </form>
 

@@ -479,3 +479,27 @@
 
   .login-footer-copy { display: none; }
 }
+
+/* ── Demo button ─────────────────────────────────────────────────────────── */
+.demo-btn {
+  width: 100%;
+  padding: 11px;
+  border-radius: 10px;
+  border: 1.5px dashed rgba(79,110,247,0.35);
+  background: rgba(79,110,247,0.05);
+  color: #7a9aff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  text-align: center;
+  margin-top: 2px;
+}
+.demo-btn:hover:not(:disabled) {
+  background: rgba(79,110,247,0.12);
+  border-color: rgba(79,110,247,0.6);
+}
+.demo-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
