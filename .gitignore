@@ -1,4 +1,4 @@
-# Python
+# ── Python ───────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
@@ -20,57 +20,57 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual Environment
+# ── Virtual environment ───────────────────────────────────────────────────────
 venv/
 env/
 ENV/
-.venv
+.venv/
 
-# Database
+# ── Environment / secrets ─────────────────────────────────────────────────────
+.env
+.env.local
+.env.production
+backend/.env
+
+# ── Database ──────────────────────────────────────────────────────────────────
 *.db
 *.sqlite
 *.sqlite3
-news_recommender.db
+backend/news_recommender.db
 
-# Jupyter Notebook
-.ipynb_checkpoints
+# ── Node / React (client) ─────────────────────────────────────────────────────
+client/node_modules/
+client/dist/
+client/.env
+client/.env.local
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
 *.ipynb_checkpoints
 
-# IDE
+# ── IDE / OS ──────────────────────────────────────────────────────────────────
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 .DS_Store
+Thumbs.db
 
-# Environment variables
-.env
-.env.local
-
-# Model files (optional - uncomment if you don't want to commit model)
-# *.pkl
-# *.h5
-# *.pth
-
-# Logs
+# ── Logs ──────────────────────────────────────────────────────────────────────
 *.log
 logs/
 
-# CSV files (optional - uncomment if you don't want to commit data)
-# *.csv
-
-# Flask
+# ── Flask ─────────────────────────────────────────────────────────────────────
 instance/
 .webassets-cache
 
-# Coverage
+# ── Coverage / test ───────────────────────────────────────────────────────────
 .coverage
 htmlcov/
 .pytest_cache/
 
-# Temporary files
+# ── Temp ──────────────────────────────────────────────────────────────────────
 *.tmp
 *.temp
 *.bak
-
