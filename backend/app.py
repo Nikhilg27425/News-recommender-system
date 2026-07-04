@@ -25,7 +25,16 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 
 # ── CORS ──────────────────────────────────────────────────────────────────────
-CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5173", "http://localhost:3000"]}},
+# Allow both local dev and production frontend
+_allowed_origins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    os.environ.get('FRONTEND_URL', ''),  # production frontend from env
+]
+# Filter empty strings
+_allowed_origins = [o for o in _allowed_origins if o]
+
+CORS(app, resources={r"/api/*": {"origins": _allowed_origins}},
      supports_credentials=True)
 
 # ── Config ────────────────────────────────────────────────────────────────────
@@ -49,6 +58,13 @@ jwt = JWTManager(app)
 DB_PATH    = os.path.join(os.path.dirname(__file__), "news_recommender.db")
 API_KEY    = os.environ.get('GNEWS_API_KEY', "172285a1b5b6f981c517e59461b31a9a")
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "ai_models/news_classifier_model.pkl")
+
+
+# ── Health check ──────────────────────────────────────────────────────────────
+@app.route('/')
+@app.route('/health')
+def health():
+    return jsonify({'status': 'ok', 'service': 'NewsSphere API'})
 
 
 # ── DB initialise ─────────────────────────────────────────────────────────────
