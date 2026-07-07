@@ -1,214 +1,275 @@
-# News Recommender System
+# NewsSphere — AI-Powered News Recommender
 
-A complete news recommendation system with machine learning classification, user interaction tracking, and a modern web interface.
+A full-stack MERN-style news recommendation system combining a React frontend with a Python/Flask API backend, machine learning classification, and OAuth authentication.
 
-🔗 **Live Demo**: [Deployed Link](https://newssphere-zvsv.onrender.com)
+🔗 **Live Demo**: [newssphere-zvsv.onrender.com](https://newssphere-zvsv.onrender.com)
+
+> **Demo credentials** — no sign-up required:
+> Click **"⚡ Try Demo"** on the login page, or use `demo / demo123`
+
+---
+
+## ✨ What's New (MERN Rebuild)
+
+The project has been completely rebuilt with a modern React frontend replacing the old Jinja2 templates:
+
+- **React + Vite frontend** — 10 fully responsive pages with dark theme
+- **Google OAuth & GitHub OAuth** — one-click sign-in
+- **JWT authentication** — stateless, works across domains
+- **Live news via GNews API** — category tabs fetch fresh articles in real time
+- **AI recommendation engine** — "For You" feed learns from your click history
+- **Bookmarks system** — save articles to named collections, share URLs
+- **Real analytics dashboard** — daily activity chart, category affinity, top sources (all from actual data)
+- **Functional profile page** — edit username/email, change password
+- **Fully deployed on Render** — static site (frontend) + web service (backend)
+
+---
 
 ## 🚀 Features
 
-- **Machine Learning Classification** - Multi-label news classification using scikit-learn
-- **User Authentication** - Secure login and registration system
-- **Live News Feed** - Fetch and display news from GNews API
-- **Personalized Recommendations** - AI-powered recommendations based on user behavior
-- **Database System** - SQLite database for news items and user interactions
-- **Modern Web UI** - Beautiful, responsive web interface
-- **Category Filtering** - Filter news by categories
-- **Reading History** - Track all articles you've read
-- **User Statistics** - View your reading patterns and preferences
+- **Machine Learning Classification** — multi-label news classification using scikit-learn (TF-IDF + Random Forest)
+- **Live News Feed** — fetch fresh articles from GNews API by category (Technology, Science, Sports, Finance, Health…)
+- **Personalized Recommendations** — "For You" tab serves articles based on your click history; cold-start falls back to popular news
+- **Google & GitHub OAuth** — full OAuth 2.0 flow, no passwords required
+- **Email/Password Auth** — traditional register/login with bcrypt hashing + JWT tokens
+- **Bookmarks & Collections** — save articles, create named collections, delete, share by copying URL
+- **Personal Analytics** — real charts: daily reading activity, category distribution, top sources, recent reads
+- **Explore & Search** — domain filters, trend pills, recency sort, full-text search — all hit the live API
+- **Responsive Design** — mobile bottom nav, tablet layout, desktop sidebar
+
+---
 
 ## 📁 Project Structure
 
 ```
 recommendor_model/
-├── backend/                    # Backend Python application
-│   ├── ai_models/             # AI/ML models
-│   │   └── news_classifier_model.pkl
-│   ├── app.py                 # Main Flask application
-│   ├── database.py            # Database operations
-│   ├── database_integration.py # API integration
-│   ├── user_interaction_helper.py # User interaction management
-│   ├── example_usage.py       # Usage examples
-│   ├── *.ipynb               # Jupyter notebooks
-│   ├── sports_classified_news.csv # Training data
-│   └── news_recommender.db    # SQLite database
+├── backend/                        # Flask API
+│   ├── ai_models/
+│   │   └── news_classifier_model.pkl   # Trained ML model
+│   ├── app.py                      # Main Flask app (JWT, OAuth, all API routes)
+│   ├── database.py                 # SQLite operations (news_items, user_interactions)
+│   ├── database_integration.py     # GNews API fetch + classify + save pipeline
+│   ├── user_interaction_helper.py  # Recommendation logic
+│   └── News_classifier.ipynb       # Model training notebook
 │
-├── frontend/                   # Frontend assets
-│   ├── static/                # Static files
-│   │   ├── css/
-│   │   │   └── style.css
-│   │   └── js/
-│   │       ├── dashboard.js
-│   │       └── main.js
-│   └── templates/             # HTML templates
-│       ├── base.html
-│       ├── dashboard.html
-│       ├── login.html
-│       └── register.html
+├── client/                         # React + Vite frontend
+│   ├── public/
+│   │   └── _redirects              # Render SPA fallback rule
+│   ├── src/
+│   │   ├── components/layout/      # Sidebar, Topbar, AppLayout
+│   │   ├── context/AuthContext.jsx # JWT token + user state
+│   │   ├── pages/                  # 10 pages (see below)
+│   │   ├── services/api.js         # Centralised API service
+│   │   └── index.css               # Global dark theme + responsive breakpoints
+│   ├── package.json
+│   └── vite.config.js
 │
-├── deployment/                 # Deployment documentation
-│   └── DEPLOYMENT.md          # Deployment instructions
+├── deployment/
+│   └── DEPLOYMENT.md               # Render deployment guide
 │
-├── requirements.txt           # Python dependencies
-├── Procfile                   # Heroku/Render deployment
-├── render.yaml               # Render deployment config
-├── runtime.txt               # Python version specification
-├── run.sh                    # Local development script
-├── LICENSE                   # MIT License
-└── README.md                 # This documentation
+├── render.yaml                     # Render Blueprint (2 services)
+├── requirements.txt                # Python dependencies
+├── Procfile                        # Gunicorn start command
+├── runtime.txt                     # Python 3.11
+└── README.md
 ```
 
-## 🛠️ Installation
+### Pages
 
-1. **Clone the repository:**
-```bash
-git clone <repository-url>
-cd recommendor_model
-```
+| Route | Page | Description |
+|-------|------|-------------|
+| `/` | Landing | Hero, trending cards, features, CTA |
+| `/login` | Login | Email/password + Google + GitHub + Demo button |
+| `/signup` | Sign Up | Register with email or OAuth |
+| `/onboarding` | Onboarding | Category preference selection |
+| `/feed` | Personalized Feed | "For You" recommendations + live category tabs |
+| `/explore` | Explore | Search, domain filters, trend pills |
+| `/bookmarks` | Bookmarks | Collections, save/delete/share |
+| `/analytics` | Analytics | Real charts from your reading data |
+| `/profile` | Profile & Settings | Edit profile, change password |
+| `/auth/callback` | OAuth Callback | Handles Google/GitHub redirect |
 
-2. **Create a virtual environment:**
+---
+
+## 🛠️ Local Development
+
+### Prerequisites
+- Python 3.11+
+- Node.js 18+
+
+### Backend
+
 ```bash
+# Clone
+git clone https://github.com/Nikhilg27425/News-recommender-system.git
+cd News-recommender-system
+
+# Python env
 python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. **Install dependencies:**
-```bash
+source venv/bin/activate
 pip install -r requirements.txt
+
+# Create backend/.env (copy and fill in)
+cp backend/.env.example backend/.env   # or create manually
+
+# Start Flask (port 5001)
+cd backend && python app.py
 ```
 
-## 🚀 Quick Start
+### Frontend
 
-1. **Start the web application:**
 ```bash
-./run.sh
+# In a separate terminal
+cd client
+npm install
+npm run dev   # → http://localhost:5173
 ```
 
-2. **Open your browser:**
-   - Navigate to `http://localhost:5001`
-   - Register a new account
-   - Start exploring!
+### Environment Variables (backend/.env)
 
-3. **Fetch news:**
-   - Click "Fetch Latest News" button
-   - Enter a topic (e.g., "technology", "sports")
-   - Articles will be classified and saved automatically
+```env
+SECRET_KEY=your-secret-key
+JWT_SECRET_KEY=your-jwt-secret
+
+# Google OAuth (console.cloud.google.com)
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+GOOGLE_REDIRECT_URI=http://localhost:5001/api/auth/google/callback
+
+# GitHub OAuth (github.com/settings/developers)
+GITHUB_CLIENT_ID=...
+GITHUB_CLIENT_SECRET=...
+GITHUB_REDIRECT_URI=http://localhost:5001/api/auth/github/callback
+
+FRONTEND_URL=http://localhost:5173
+GNEWS_API_KEY=your-gnews-api-key
+```
+
+---
+
+## 📡 API Endpoints
+
+### Auth
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | Email/password registration |
+| POST | `/api/auth/login` | Email/password login |
+| GET  | `/api/auth/me` | Get current user (JWT required) |
+| GET  | `/api/auth/google` | Get Google OAuth URL |
+| GET  | `/api/auth/google/callback` | Google OAuth callback |
+| GET  | `/api/auth/github` | Get GitHub OAuth URL |
+| GET  | `/api/auth/github/callback` | GitHub OAuth callback |
+
+### News
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/news/feed?category=&limit=` | Articles from DB by category |
+| GET | `/api/news/live?category=&limit=` | Fresh articles from GNews API |
+| GET | `/api/news/recommendations` | Personalised recommendations |
+| GET | `/api/news/trending` | Most-clicked articles |
+| GET | `/api/news/search?q=` | Full-text search |
+| POST | `/api/news/click` | Record article click (trains recommender) |
+
+### Bookmarks
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/bookmarks/collections` | List user's collections |
+| POST | `/api/bookmarks/collections` | Create new collection |
+| DELETE | `/api/bookmarks/collections/:id` | Delete collection |
+| GET | `/api/bookmarks` | Get bookmarks (optional `?collection_id=`) |
+| POST | `/api/bookmarks` | Save article to collection |
+| DELETE | `/api/bookmarks/:id` | Remove bookmark |
+| GET | `/api/bookmarks/check/:news_id` | Check if article is bookmarked |
+
+### User
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/user/analytics` | Full analytics (charts data) |
+| GET | `/api/user/profile` | Get profile details |
+| PUT | `/api/user/profile` | Update username/email |
+| POST | `/api/user/change-password` | Change password |
+| GET | `/api/user/history` | Reading history |
+
+---
 
 ## 🗄️ Database Schema
 
-The system uses two main databases:
-
-1. **news_items** - Stores news articles with classifications
-2. **user_interactions** - Tracks user clicks and preferences
-
-The database is automatically initialized when you first run the application.
-
-## 🔧 Configuration
-
-### API Key
-Update the `API_KEY` in `backend/app.py` with your GNews API key:
-```python
-API_KEY = "your-api-key-here"
+```
+news_items          — articles fetched from GNews + ML labels
+user_interactions   — click tracking (drives recommendations)
+users               — accounts (email/password + Google/GitHub OAuth)
+bookmark_collections — named collections per user
+bookmarks           — saved articles linked to collections
 ```
 
-### Port
-The default port is 5001. To change it, edit `backend/app.py`:
-```python
-app.run(debug=True, host='0.0.0.0', port=5001)
-```
+---
 
-## 📊 Model Training
+## 🤖 ML Model
 
-The news classification model is trained using:
-- Multi-label classification
-- TF-IDF vectorization
-- Random Forest classifier
-- Top-K prediction strategy
+- **Architecture**: Multi-label classifier (one estimator per class, scikit-learn)
+- **Input**: TF-IDF vectorized text (title + description + content)
+- **Output**: Top-3 category labels per article (news, finance, sports, health, travel…)
+- **Threshold**: 0.3 probability cutoff for label assignment
+- **Training**: See `backend/News_classifier.ipynb`
 
-See `backend/News_classifier.ipynb` for training details.
+---
 
-## 🎯 Usage Examples
+## 🚢 Deployment (Render)
 
-### Fetch and Classify News
-```python
-from backend.database_integration import fetch_and_save_news
+Two services defined in `render.yaml`:
 
-fetch_and_save_news(
-    api_key="your-api-key",
-    query="technology",
-    max_results=10
-)
-```
+| Service | Type | Description |
+|---------|------|-------------|
+| `newssphere-api` | Web Service (Python) | Flask API backend |
+| `newssphere` | Static Site | React frontend |
 
-### Record User Interaction
-```python
-from backend.database import NewsDatabase
+See [`deployment/DEPLOYMENT.md`](deployment/DEPLOYMENT.md) for full step-by-step guide.
 
-db = NewsDatabase()
-db.record_user_interaction("user_123", "news_id_456", "click")
-db.close()
-```
+---
 
-### Get Recommendations
-```python
-from backend.user_interaction_helper import UserInteractionManager
+## 🔒 Security
 
-manager = UserInteractionManager()
-recommendations = manager.get_recommendations_for_user("user_123", limit=10)
-manager.close()
-```
+- Passwords hashed with `werkzeug.security` (bcrypt)
+- JWT tokens expire after 7 days
+- CORS restricted to known frontend origins
+- OAuth credentials stored as environment variables only — never committed
+- `.env` is in `.gitignore`
 
-## 🧪 Testing
-
-Run the example script to test the system:
-```bash
-cd backend
-python example_usage.py
-```
-
-## 📝 API Endpoints
-
-- `GET /` - Home page
-- `GET/POST /login` - User login
-- `GET/POST /register` - User registration
-- `GET /dashboard` - Main dashboard
-- `GET /api/news/feed` - Get news feed
-- `GET /api/news/recommendations` - Get recommendations
-- `POST /api/news/click` - Record click
-- `GET /api/user/stats` - User statistics
-- `GET /api/user/history` - Reading history
-
-## 🔒 Security Notes
-
-⚠️ **Before deploying to production:**
-- Change the `SECRET_KEY` in `backend/app.py`
-- Use environment variables for sensitive data
-- Consider using a production WSGI server (Gunicorn)
-- Enable HTTPS
+---
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes
+4. Push to the branch and open a pull request
+
+---
 
 ## 📄 License
 
-This project is licensed under the **MIT License**.
+This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
+
+---
 
 ## 🙏 Acknowledgments
 
-- GNews API for news data
-- scikit-learn for machine learning
-- Flask for web framework
+- [GNews API](https://gnews.io) — news data source
+- [scikit-learn](https://scikit-learn.org) — ML classification
+- [Flask](https://flask.palletsprojects.com) — Python web framework
+- [React](https://react.dev) + [Vite](https://vitejs.dev) — frontend stack
+- [Recharts](https://recharts.org) — analytics charts
+- [Render](https://render.com) — hosting
+
+---
 
 ## 📧 Contact
 
-For any inquiries or collaborations, reach out to:
+For inquiries or collaborations:
+
 📧 Email: 23UCS752@lnmiit.ac.com
 📌 GitHub: [Nikhil Gupta](https://github.com/Nikhilg27425)
 
 ---
 
 **Happy News Reading! 📰**
-
